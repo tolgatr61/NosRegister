@@ -2,12 +2,11 @@
 require_once('config.php');
 if(!isset($_COOKIE['passkey']))
 {
-	setcookie("passkey", "", time()-3600); //adio my friend
+	setcookie("passkey", "", time()-3600);
 }
 $secret = rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100);
 $secret = hash("sha512", $secret);
 setcookie("passkey", $secret);
-///////////////DONT TUCH!////////////////////
 $headers = apache_request_headers();
 if(isset($headers['If-Modified-Since'])) {
   if(strtotime($headers['If-Modified-Since']) < time() - 43200) {
@@ -16,12 +15,10 @@ if(isset($headers['If-Modified-Since'])) {
     exit;
   }
 }
-///////////////DONT TUCH!////////////////////
-//require_once();
 $ip = $_SERVER['REMOTE_ADDR'];
 $reg = @$_GET['reg'];
 if($reg == "success")
-	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Account creeated success fully</div>';
+	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.$_GET['user'].' ! Your account was created. Enjoy!</div>';
 if($reg == "faildup")
 	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Account name already exist. Please choose differit name</div>';
 if($reg == "failpass")
@@ -31,7 +28,7 @@ if($reg == "elimit")
 ?>
 <html>
 	<head>
-		<title><?php echo $title; ?></title>
+		<title><?= $title?></title>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -61,9 +58,9 @@ if($reg == "elimit")
 		});
 		</script>
 		<script src="<?php echo $hosturl;?>/js/bootstrap.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="<?php echo $hosturl;?>/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="<?php echo $hosturl;?>/css/style.css">
-		<link rel="stylesheet" type="text/css" href="<?php echo $hosturl;?>/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="<?= $hosturl?>/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="<?= $hosturl?>/css/style.css">
+		<link rel="stylesheet" type="text/css" href="<?= $hosturl?>/css/font-awesome.min.css">
 	</head>
 	<body>
 		<div id='cont'>
@@ -71,42 +68,46 @@ if($reg == "elimit")
 			  <div class='form-group'>
 				<label for='user'>Username</label>
 				<input type='text' class='form-control' id='user' pattern=".{6,30}" placeholder='Username' name='user' required><span style="float:right;" id="user-result"></span>
+				<p class="help-block">Username must be between 6 and 30 characters</p>
 			  </div>
-<!--
-			  <div class='form-group'>
-				<label for='Email'>Email</label>
-				<input type='email' class='form-control' id='exampleInputEmail1' placeholder='Email' name='email' required>
-			  </div>
--->
 			  <div class='form-group'>
 				<label for='Password'>Password</label>
 				<input type='password' class='form-control' pattern=".{6,30}" placeholder='Password' name='pass' required>
+				<p class="help-block">Password must be between 6 and 30 characters. We recommand to use complexe password.</p>
 			  </div>
 			  <div class='form-group'>
 				<label for='Password1'>Repeat Password</label>
 				<input type='password' class='form-control' pattern=".{6,30}" placeholder='Repeat Password' name='c_pass' required>
+				<p class="help-block">Repeat your password.</p>
 			  </div>
-			  <input type='hidden' name='passkey' value='<?php echo $secret;?>'>
-			  <input type='hidden' name='ip' value='<?php echo $ip;?>'>
-			  <center><button type='submit' class='btn btn-primary'>Register</button><div class='btn btn-info' style='margin-left:5px;' data-toggle="modal" data-target="#myModal"><a style='color:white !important;font-weight:700;text-decoration:none'> <i class='fa fa-cloud-download'></i> Download</a></div></center>
+			  <input type='hidden' name='passkey' value='<?= $secret?>'>
+			  <input type='hidden' name='ip' value='<?= $ip?>'>
+			  <center><button type='submit' class='btn btn-success'>Register</button>
+<?			if(!empty($dl['1']))
+			  echo "<div class='btn btn-info' style='margin-left:5px;' data-toggle='modal' data-target='#myModal'><a style='color:white !important;font-weight:700;text-decoration:none'><i class='fa fa-cloud-download'></i> Download</a></div>";?>
+			</center>
 			</form>
+<?			if(!empty($host))
+	echo'
 			<hr>
 			<center><h3 style="">Server Status</h3></center>
 			<center><span id="server-result"></span></center>
+		';?>
 		</div>
-		<!-- Modal -->
+<?
+ if(!empty($dl['1']))
+{
+	echo '
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog" role="document">
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel"><center>Download Client of <?php echo $title;?></h4>
+				<h4 class="modal-title" id="myModalLabel"><center>Download Client of <?= $title?></h4>
 			  </div>
 			  <div class="modal-body">
 			  <center><h2>Download Servers<h2></center><hr><hr>
-			  <h3>
-<?php
-/////////////////////DONT TUCH///////////////////////////////
+			  <h3>';
 if(!empty($dl['1']))
 echo "Download : <a href='" . $dl['1'] ."'> Server I <i class='fa fa-cloud-download'></i> </a><hr/>";
 if(!empty($dl['2']))
@@ -117,8 +118,7 @@ if(!empty($dl['4']))
 echo "Download : <a href='" . $dl['4'] ."'> Server IV <i class='fa fa-cloud-download'></i> </a><hr/>";
 if(!empty($dl['5']))
 echo "Download : <a href='" . $dl['5'] ."'> Server V <i class='fa fa-cloud-download'></i> </a><br/>";
-//////////////////////////////////////////////////////////////
-?>
+echo '
 			</h3>
 			  </div>
 			  <div class="modal-footer">
@@ -126,6 +126,7 @@ echo "Download : <a href='" . $dl['5'] ."'> Server V <i class='fa fa-cloud-downl
 			  </div>
 			</div>
 		  </div>
-		</div>
+		</div>';
+}?>
 	</body>
 </html>

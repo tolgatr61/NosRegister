@@ -1,1 +1,49 @@
-body{background:url(../img/background.jpg) center center fixed;background-size:cover}#alert{position:absolute;top:20%;left:50%;transform:translate(-50%,-50%);width:35%;z-index:5000000}#cont{position:absolute;top:50%;padding:15px;left:50%;transform:translate(-50%,-50%);width:40%;border-radius:25px;background-color:rgba(232,232,232,.82)}@media (max-width:767px){body{background:#1e1614}#cont{position:absolute;top:50%;padding:15px;left:50%;transform:translate(-50%,-50%);width:90%;border-radius:25px;height:363px;background-color:rgba(232,232,232,.82)}}
+body {
+  background: url(../img/background.jpg) center center fixed;
+  background-size: cover;
+}
+
+#alert {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 35%;
+  z-index: 5000000;
+}
+
+label {
+    color: floralwhite;
+}
+
+.help-block {
+    color: floralwhite;
+}
+#cont {
+  position: absolute;
+  top: 50%;
+  padding: 15px;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 40%;
+  border-radius: 25px;
+  background-color: #009688;
+}
+
+@media (max-width:767px) {
+  body {
+    background: #1e1614;
+  }
+
+  #cont {
+    position: absolute;
+    top: 50%;
+    padding: 15px;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 90%;
+    border-radius: 25px;
+    height: 363px;
+    background-color: rgba(232,232,232,.82);
+  }
+}

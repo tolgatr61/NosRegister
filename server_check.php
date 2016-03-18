@@ -12,7 +12,7 @@ function check($hostip, $port, $svname)
             echo "<j style='color:green'>$svname Online </j><br/>";
             if ($x) 
             { 
-                @fclose($x); //close connection 
+                @fclose($x);
             } 
         }   
 }
