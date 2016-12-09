@@ -19,9 +19,10 @@ if($resp->isSuccess())
 			{
 				$params = array($user);
 				$sql = "SELECT * FROM Account WHERE Name = ?";
-				$restul = sqlsrv_query($mssql, $sql, $params);
+				$opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+				$restul = sqlsrv_query($mssql, $sql, $params, $opts);
 				$result = sqlsrv_num_rows($restul);
-				if($result  == true)
+				if($result < 1)
 				{
 					$pass = hash("sha512", $pass);
 					$session = rand(1,9).rand(0,9);
