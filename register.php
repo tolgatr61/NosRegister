@@ -1,48 +1,59 @@
 <?php
 require_once('config.php');
-$user = @$_POST['user'];
-$pass = @$_POST['pass'];
-$confirmpass = @$_POST['c_pass'];
-$ip = @$_POST['ip'];
-$passkey = @$_POST['passkey'];
+$user = cleanthis(@$_POST['user']);
+$pass = cleanthis(@$_POST['pass']);
+$confirmpass = cleanthis(@$_POST['c_pass']);
+$ip = cleanthis($_SERVER['REMOTE_ADDR']);
+$passkey = cleanthis(@$_POST['passkey']);
 $data = date("Y-m-d H:i:s");
-$user = $sql->real_escape_string(stripslashes($user));
-$pass = $sql->real_escape_string(stripslashes($pass));
-$ip = $sql->real_escape_string(stripslashes($ip));
-$confirmpass = $sql->real_escape_string(stripslashes($confirmpass));
-if($_COOKIE['passkey'] == $passkey)
+$cpasskey = cleanthis($_COOKIE['passkey']);
+
+$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+if($resp->isSuccess())
 {
-	if($pass === $confirmpass)
+	if($cpasskey == $passkey)
 	{
-		if(strlen($pass) < 235 || strlen($user) < 255)
+		if($pass === $confirmpass)
 		{
-			$restul = $sql->query("SELECT * FROM `account` WHERE `Name`='$user'");
-			if($restul->num_rows < 1)
+			if(strlen($pass) < 235 || strlen($user) < 255)
 			{
-				$pass = hash("sha256", $pass);
-				$session = rand(1,9).rand(0,9);
-				$sql->query("INSERT INTO `account` (`Name`, `Password`, `Authority`, `LastSession`, `LastCompliment`) VALUES ('$user', '$pass', '0', '$session', '$data')");
-				header("Location: index.php?reg=success&user=$user");
-				exit();
+				$params = array($user);
+				$sql = "SELECT * FROM Account WHERE Name = ?";
+				$restul = sqlsrv_query($mssql, $sql, $params);
+				$result = sqlsrv_num_rows($restul);
+				if($result  == true)
+				{
+					$pass = hash("sha512", $pass);
+					$session = rand(1,9).rand(0,9);
+					$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment) VALUES ( ?, ?, '0', ?, ?)";
+					$params = array($user, $pass, $session, $data);
+					$result = sqlsrv_query($mssql, $sql, $params);
+					header("Location: index.php?reg=success&user=$user");
+					exit();
+				}
+				else
+				{
+					header("Location: index.php?reg=faildup");
+					exit();
+				}
 			}
-			else
-			{
-				header("Location: index.php?reg=faildup");
+			else {
+				header("Location: index.php?reg=elimit");
 				exit();
 			}
 		}
 		else {
-			header("Location: index.php?reg=elimit");
+			header("Location: index.php?reg=failpass");
 			exit();
 		}
 	}
-	else {
-		header("Location: index.php?reg=failpass");
-		exit();
+	else
+	{
+		die("Nice try my friend! <b>Access Denied</b>");
 	}
 }
-else
-{
-	die("Nice try my friend! <b>Access Denied</b>");
+else {
+	header("Location: index.php?reg=gfail");
+	exit();
 }
 ?>

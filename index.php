@@ -4,7 +4,7 @@ if(!isset($_COOKIE['passkey']))
 {
 	setcookie("passkey", "", time()-3600);
 }
-$secret = rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100);
+$secret = rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . $title . rand(1,100);
 $secret = hash("sha512", $secret);
 setcookie("passkey", $secret);
 $headers = apache_request_headers();
@@ -15,7 +15,6 @@ if(isset($headers['If-Modified-Since'])) {
     exit;
   }
 }
-$ip = $_SERVER['REMOTE_ADDR'];
 $reg = @$_GET['reg'];
 if($reg == "success")
 	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.$_GET['user'].' ! Your account was created. Enjoy!</div>';
@@ -25,6 +24,8 @@ if($reg == "failpass")
 	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Password must be same.</div>';
 if($reg == "elimit")
 	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Your password or username are too long.</div>';
+if($reg == "gfail")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! You don\'t pass google captcha test. Are you a robot?</div>';
 ?>
 <html>
 	<head>
@@ -33,7 +34,7 @@ if($reg == "elimit")
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Cache-control" content="private">
-		<script src="<?php echo $hosturl;?>/js/jquery.min.js"></script>
+		<script src="./js/jquery.min.js"></script>
 		<script type="text/javascript">
 		$(document).ready(function() {
 			$("#user").keyup(function (e) {
@@ -49,18 +50,11 @@ if($reg == "elimit")
 			});	
 		});
 		</script>
-		<script type="text/javascript">
-		$(document).ready(function() {
-					$("#server-result").html('<i class="fa-li fa fa-spinner fa-spin"></i>');
-					$.post('server_check.php', {'check':'true'}, function(data) {
-					  $("#server-result").html(data);
-					});
-		});
-		</script>
-		<script src="<?php echo $hosturl;?>/js/bootstrap.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="<?= $hosturl?>/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="<?= $hosturl?>/css/style.css">
-		<link rel="stylesheet" type="text/css" href="<?= $hosturl?>/css/font-awesome.min.css">
+		<script src="./js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="./css/style.css">
+		<link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
+		<script src='https://www.google.com/recaptcha/api.js'></script>
 	</head>
 	<body>
 		<div id='cont'>
@@ -80,19 +74,16 @@ if($reg == "elimit")
 				<input type='password' class='form-control' pattern=".{6,30}" placeholder='Repeat Password' name='c_pass' required>
 				<p class="help-block">Repeat your password.</p>
 			  </div>
+			  <?php
+			  if($usecaptcha == true)
+				  echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
+			  ?>
 			  <input type='hidden' name='passkey' value='<?= $secret?>'>
-			  <input type='hidden' name='ip' value='<?= $ip?>'>
 			  <center><button type='submit' class='btn btn-success'>Register</button>
 <?			if(!empty($dl['1']))
 			  echo "<div class='btn btn-info' style='margin-left:5px;' data-toggle='modal' data-target='#myModal'><a style='color:white !important;font-weight:700;text-decoration:none'><i class='fa fa-cloud-download'></i> Download</a></div>";?>
 			</center>
 			</form>
-<?			if(!empty($host))
-	echo'
-			<hr>
-			<center><h3 style="">Server Status</h3></center>
-			<center><span id="server-result"></span></center>
-		';?>
 		</div>
 <?
  if(!empty($dl['1']))
@@ -103,21 +94,17 @@ if($reg == "elimit")
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel"><center>Download Client of <?= $title?></h4>
+				<h4 class="modal-title" id="myModalLabel"><center>Download Client of '.$title.'</h4>
 			  </div>
 			  <div class="modal-body">
 			  <center><h2>Download Servers<h2></center><hr><hr>
 			  <h3>';
+			  
 if(!empty($dl['1']))
-echo "Download : <a href='" . $dl['1'] ."'> Server I <i class='fa fa-cloud-download'></i> </a><hr/>";
+echo "Download : <a href='" . $dl['1'] ."'> ".$dl['name1']." <i class='fa fa-cloud-download'></i> </a><hr/>";
 if(!empty($dl['2']))
-echo "Download : <a href='" . $dl['2'] ."'> Server II <i class='fa fa-cloud-download'></i> </a><hr/>";
-if(!empty($dl['3']))
-echo "Download : <a href='" . $dl['3'] ."'> Server III <i class='fa fa-cloud-download'></i> </a><hr/>";
-if(!empty($dl['4']))
-echo "Download : <a href='" . $dl['4'] ."'> Server IV <i class='fa fa-cloud-download'></i> </a><hr/>";
-if(!empty($dl['5']))
-echo "Download : <a href='" . $dl['5'] ."'> Server V <i class='fa fa-cloud-download'></i> </a><br/>";
+echo "Download : <a href='" . $dl['2'] ."'> ".$dl['name2']." <i class='fa fa-cloud-download'></i> </a><hr/>";
+
 echo '
 			</h3>
 			  </div>

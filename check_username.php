@@ -7,13 +7,14 @@ if(isset($_POST["user"]))
 	}
 	$username =  strtolower(trim($_POST["user"])); 
 	$username = filter_var($username, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW|FILTER_FLAG_STRIP_HIGH);
-	$results = $sql->query("SELECT `Name` FROM `account` WHERE `Name`='$username'");
-	$username_exist = mysqli_num_rows($results);
-	if($username_exist) {
-		die('<i style="color:red;" class="fa fa-times-circle"></i> Username not available! Try again.');
-	}else{
-		die('<i style="color:lime;" class="fa fa-check"></i> Available');
-	}
+	$username = htmlspecialchars($username, ENT_QUOTES);
+	$params = array($username);
+	$sql = "SELECT Name FROM Account WHERE Name= ?";
+	$results = sqlsrv_query($mssql, $sql, $params);
+	$username_exist = sqlsrv_num_rows($results);
+	if($username_exist == false)
+		die('<i class="fa fa-ban" aria-hidden="true"></i> Username not available! Try again.');
+	else
+		die('<i class="fa fa-check" aria-hidden="true"></i> Available');
 }
 ?>
-
