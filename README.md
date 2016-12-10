@@ -35,3 +35,4 @@ NosTale Register page for Emulators and Private Server
 
 ##I need more help!
 If you don't know how to add extention just search on google/youtube "How to add extenstion to php"
+Remember to enable shorttag in php
