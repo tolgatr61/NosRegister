@@ -32,4 +32,6 @@ NosTale Register page for Emulators and Private Server
 * extension=php_sqlsrv_7_nts_x86.dll
 * extension=php_sqlsrv_7_ts_x64.dll
 * extension=php_sqlsrv_7_ts_x86.dll
+
+##I need more help!
 If you don't know how to add extention just search on google/youtube "How to add extenstion to php"
