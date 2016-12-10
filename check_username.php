@@ -13,9 +13,9 @@ if(isset($_POST["user"]))
 	$sql = "SELECT Name FROM Account WHERE Name= ?";
 	$results = sqlsrv_query($mssql, $sql, $params, $opts);
 	$username_exist = sqlsrv_num_rows($results);
-	if($username_exist > 1)
-		die('<i class="fa fa-ban" aria-hidden="true"></i> Username not available! Try again.');
+	if($username_exist == 1)
+		die('<span style="color:#F44336;"><i class="fa fa-ban" aria-hidden="true"></i> Username not available! Try again.</span>');
 	else
-		die('<i class="fa fa-check" aria-hidden="true"></i> Available');
+		die('<span style="color:#8BC34A;"><i class="fa fa-check" aria-hidden="true"></i> Available</span>');
 }
 ?>

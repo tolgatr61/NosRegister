@@ -16,8 +16,11 @@ if(isset($headers['If-Modified-Since'])) {
   }
 }
 $reg = @$_GET['reg'];
+$reg = cleanthis($reg);
+if($reg == "active")
+	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><b>Success!</b> Your account are now activated and you are ready to play!</div>';
 if($reg == "success")
-	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.$_GET['user'].' ! Your account was created. Enjoy!</div>';
+	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.<br/> To be sure that you entered the correct email ('.cleanthis($_GET['mail']).') we sent an email with the activation code.</div>';
 if($reg == "faildup")
 	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Account name already exist. Please choose differit name</div>';
 if($reg == "failpass")
@@ -26,6 +29,16 @@ if($reg == "elimit")
 	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Your password or username are too long.</div>';
 if($reg == "gfail")
 	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! You don\'t pass google captcha test. Are you a robot?</div>';
+if($reg == "maildup")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Email address already in use. Try again with other mail.</div>';
+if($reg == "mailfail")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! What you entered does not appear to be an email address. Please try again.</div>';
+if($reg == "nokey")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! We can\'t find your activation code are you typed right? Try again!</div>';
+if($reg == "notkey")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! What you entered does not appear to be a code. What are you trying to do?</div>';
+if($reg == "gfailkey")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Captcha failed! Try again! Be more carefully!</div>';
 ?>
 <html>
 	<head>
@@ -65,16 +78,28 @@ if($reg == "gfail")
 				<p class="help-block">Username must be between 6 and 30 characters</p>
 			  </div>
 			  <div class='form-group'>
+				<label for='Password'>Email</label>
+				<input type='email' id="noremember" class='form-control' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder='email@you.there' name='email' onfocus="this.removeAttribute('readonly');" required readonly>
+				<p class="help-block">Your email address. Please do not use yahoo!</p>
+			  </div>
+			  <div class='form-group'>
 				<label for='Password'>Password</label>
-				<input type='password' class='form-control' pattern=".{6,30}" placeholder='Password' name='pass' required>
+				<input type='password' id="noremember" class='form-control' pattern=".{6,30}" placeholder='Password' name='pass' onfocus="this.removeAttribute('readonly');" required readonly>
 				<p class="help-block">Password must be between 6 and 30 characters. We recommand to use complexe password.</p>
 			  </div>
 			  <div class='form-group'>
 				<label for='Password1'>Repeat Password</label>
-				<input type='password' class='form-control' pattern=".{6,30}" placeholder='Repeat Password' name='c_pass' required>
+				<input type='password' class='form-control' pattern=".{6,30}" id="noremember" placeholder='Repeat Password' name='c_pass' onfocus="this.removeAttribute('readonly');" required readonly>
 				<p class="help-block">Repeat your password.</p>
 			  </div>
 			  <?php
+			  if($displaytos == true)
+				  echo "
+			  <div class='checkbox'>
+				<label>
+				  <input type='checkbox' name='tos' value='true' required> I agree to the <a href='$toslink'>Terms of Use</a> and <a href='$pplink'>Privacy Policy</a>.
+				</label>
+			  </div>";
 			  if($usecaptcha == true)
 				  echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
 			  ?>
@@ -97,7 +122,7 @@ if($reg == "gfail")
 				<h4 class="modal-title" id="myModalLabel"><center>Download Client of '.$title.'</h4>
 			  </div>
 			  <div class="modal-body">
-			  <center><h2>Download Servers<h2></center><hr><hr>
+			  <center><h2>Download Links<h2></center><hr><hr>
 			  <h3>';
 			  
 if(!empty($dl['1']))

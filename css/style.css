@@ -15,7 +15,16 @@ body {
 label {
     color: floralwhite;
 }
-
+a {
+	color: #FFC107;
+	text-decoration: none;
+	transition: 0.2s;
+}
+a:hover {
+	color:#ff6f00;
+	text-decoration:none;
+	transition: 0.2s;
+}
 .help-block {
     color: floralwhite;
 }
@@ -45,7 +54,6 @@ label {
     transform: translate(-50%,-50%);
     width: 90%;
     border-radius: 25px;
-    height: 363px;
     background-color: rgba(232,232,232,.82);
   }
 }

@@ -4,12 +4,15 @@ $user = cleanthis(@$_POST['user']);
 $pass = cleanthis(@$_POST['pass']);
 $confirmpass = cleanthis(@$_POST['c_pass']);
 $ip = cleanthis($_SERVER['REMOTE_ADDR']);
+$email = $_POST['email'];
 $passkey = cleanthis(@$_POST['passkey']);
 $data = date("Y-m-d H:i:s");
 $cpasskey = cleanthis($_COOKIE['passkey']);
 
+$email = filter_var($email, FILTER_SANITIZE_STRING);
+
 $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
-if($resp->isSuccess())
+if($resp->isSuccess() or $usecaptcha == false)
 {
 	if($cpasskey == $passkey)
 	{
@@ -24,13 +27,36 @@ if($resp->isSuccess())
 				$result = sqlsrv_num_rows($restul);
 				if($result < 1)
 				{
-					$pass = hash("sha512", $pass);
-					$session = rand(1,9).rand(0,9);
-					$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment) VALUES ( ?, ?, '0', ?, ?)";
-					$params = array($user, $pass, $session, $data);
-					$result = sqlsrv_query($mssql, $sql, $params);
-					header("Location: index.php?reg=success&user=$user");
-					exit();
+					if(filter_var($email, FILTER_VALIDATE_EMAIL))
+					{
+						$params = array($email);
+						$sql = "SELECT * FROM Account WHERE Email = ?";
+						$opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+						$result = sqlsrv_query($mssql, $sql, $params, $opts);
+						$restul = sqlsrv_num_rows($result);
+						if($restul < 1)
+						{
+							$pass = hash("sha512", $pass);
+							$session = rand(1,9).rand(0,9);
+							$mailtoken = $passkey.$pass.$user.$data.$ip.$passkey.$title.$email.$session;
+							$mailtoken = md5(md5($mailtoken).md5($mailtoken).$data.$ip);
+							$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '0', ?, ?, ?, ?, ?)";
+							$params = array($user, $pass, $session, $data, $email, $ip, $mailtoken);
+							$result = sqlsrv_query($mssql, $sql, $params);
+							registermail($email, $mailtoken, $user);
+							header("Location: index.php?reg=success&user=$user&mail=$email");
+							exit();
+						}
+						else
+						{
+							header("Location: index.php?reg=maildup");
+							exit();
+						}
+					}
+					else {
+						header("Location: index.php?reg=mailfail");
+						exit();
+					}
 				}
 				else
 				{
