@@ -47,6 +47,7 @@ if($reg == "gfailkey")
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Cache-control" content="private">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 		<script src="./js/jquery.min.js"></script>
 		<script type="text/javascript">
 		$(document).ready(function() {

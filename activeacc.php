@@ -21,24 +21,24 @@ if($status == "active")
 				$params = array($code);
 				$sql = "UPDATE Account SET VerificationToken = 'yes' WHERE VerificationToken = ?";
 				$result = sqlsrv_query($mssql, $sql, $params);
-				header("Location: index.php?status=active");
+				header("Location: index.php?reg=active");
 				exit();
 			}
 			else
 			{
-				header("Location: index.php?status=nokey");
+				header("Location: index.php?reg=nokey");
 				exit();
 			}
 		}
 		else
 		{
-			header("Location: index.php?status=notkey");
+			header("Location: index.php?reg=notkey");
 			exit();
 		}
 	}
 	else
 	{
-			header("Location: index.php?status=gfailkey");
+			header("Location: index.php?reg=gfailkey");
 			exit();
 	}
 }
