@@ -16,10 +16,20 @@ $displaytos = false;
 $toslink = ""; //link to your ToS page eg "//mywebsite.com/tos.html" (please use // instead of http or https !!!)
 $pplink = ""; //link to your Privacy Policy page eg "//mywebsite.com/pp.html" (please use // instead of http or https !!!)
 ///////////////////////////////////////////
+////Do you want to enable forgot ?      ///
+////true = yes  | false = no            ///
+///////////////////////////////////////////
+$forgot = false; //for a moment leave it false, isn't work.
+///////////////////////////////////////////////
+////Do you want to send verification mail ? ///
+////true = yes  | false = no            	///
+///////////////////////////////////////////////
+$sendverification = false;
+///////////////////////////////////////////
 ////Do you want to use Google CAPTCHA ? ///
 ////true = yes  | false = no            ///
 ///////////////////////////////////////////
-$usecaptcha = false; //if you want to use google captcha you can get secret key and public key there https://www.google.com/recaptcha/admin
+$usecaptcha = true; //if you want to use google captcha you can get secret key and public key there https://www.google.com/recaptcha/admin
 $captchapublickey = ""; //If yes , put your PUBLIC key there  (site key its called on google page's)
 $captchasecret = ""; //If yes, put your SECRET key there
 ///////////////////////////////////////////
@@ -142,7 +152,7 @@ function registermail($email, $mailtoken, $user)
 	$message .= "									Hello $user,<br/>
 									Welcome to our server $title we need to check if this is really your email address.<br/>
 									Please click below button to activate your accont.<br/>
-									<div align='center'><a href=\"$hosturl/activeacc.php?key=$mailtoken\" onMouseOver=\"this.style.color='#03a9f4'\" onMouseOut=\"this.style.color='#f9823a'\" style='color: #f9823a;font-family: 'Raleway', arial;font-size: 18px;line-height: 28px;text-decoration: none;padding: 3px 5px;border: 2px dashed'>Activate account</a><br/></div>
+									<div align='center'><a href=\"$hosturl/activeacc.php?key=$mailtoken\" style='color: #f9823a; font-family: 'Raleway', arial;font-size: 18px;line-height: 28px;text-decoration: none;padding: 3px 5px;border: 2px dashed'>Activate account</a><br/></div>
 									If above button don't work you can go manually at :<br/> $hosturl/activeacc.php <br/> and enter below key<br/>
 									<b>$mailtoken</b><br/>
 									Your Staff, $title<br/>";

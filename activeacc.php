@@ -21,26 +21,17 @@ if($status == "active")
 				$params = array($code);
 				$sql = "UPDATE Account SET VerificationToken = 'yes' WHERE VerificationToken = ?";
 				$result = sqlsrv_query($mssql, $sql, $params);
-				header("Location: index.php?reg=active");
-				exit();
+				exit(header("Location: index.php?reg=active"));
+				
 			}
 			else
-			{
-				header("Location: index.php?reg=nokey");
-				exit();
-			}
+				exit(header("Location: index.php?reg=nokey"));
 		}
 		else
-		{
-			header("Location: index.php?reg=notkey");
-			exit();
-		}
+			exit(header("Location: index.php?reg=notkey"));
 	}
 	else
-	{
-			header("Location: index.php?reg=gfailkey");
-			exit();
-	}
+			exit(header("Location: index.php?reg=gfailkey"));
 }
 ?>
 <html>
@@ -53,7 +44,7 @@ if($status == "active")
 		<script src="./js/jquery.min.js"></script>
 		<script src="./js/bootstrap.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="./css/style.css">
+		<link rel="stylesheet" type="text/css" href="./css/style.min.css">
 		<link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
 		<script src='https://www.google.com/recaptcha/api.js'></script>
 	</head>

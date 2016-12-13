@@ -21,6 +21,8 @@ if($reg == "active")
 	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><b>Success!</b> Your account are now activated and you are ready to play!</div>';
 if($reg == "success")
 	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.<br/> To be sure that you entered the correct email ('.cleanthis($_GET['mail']).') we sent an email with the activation code.</div>';
+if($reg == "sucess")
+	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.';
 if($reg == "faildup")
 	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Account name already exist. Please choose differit name</div>';
 if($reg == "failpass")
@@ -66,7 +68,7 @@ if($reg == "gfailkey")
 		</script>
 		<script src="./js/bootstrap.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="./css/style.css">
+		<link rel="stylesheet" type="text/css" href="./css/style.min.css">
 		<link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
 		<script src='https://www.google.com/recaptcha/api.js'></script>
 	</head>
@@ -103,6 +105,8 @@ if($reg == "gfailkey")
 			  </div>";
 			  if($usecaptcha == true)
 				  echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
+			  if($forgot == true)
+			      echo "<a href='#' data-toggle='modal' data-target='#forgot'>I forgot my password!</a>";
 			  ?>
 			  <input type='hidden' name='passkey' value='<?= $secret?>'>
 			  <center><button type='submit' class='btn btn-success'>Register</button>
@@ -112,27 +116,54 @@ if($reg == "gfailkey")
 			</form>
 		</div>
 <?
- if(!empty($dl['1']))
-{
-	echo '
+ if(!empty($dl['1'])) {
+     echo '
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog" role="document">
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel"><center>Download Client of '.$title.'</h4>
+				<h4 class="modal-title" id="myModalLabel"><center>Download Client of ' . $title . '</h4>
 			  </div>
 			  <div class="modal-body">
 			  <center><h2>Download Links<h2></center><hr><hr>
 			  <h3>';
-			  
-if(!empty($dl['1']))
-echo "Download : <a href='" . $dl['1'] ."'> ".$dl['name1']." <i class='fa fa-cloud-download'></i> </a><hr/>";
-if(!empty($dl['2']))
-echo "Download : <a href='" . $dl['2'] ."'> ".$dl['name2']." <i class='fa fa-cloud-download'></i> </a><hr/>";
 
-echo '
+     if (!empty($dl['1']))
+         echo "Download : <a href='" . $dl['1'] . "'> " . $dl['name1'] . " <i class='fa fa-cloud-download'></i> </a><hr/>";
+     if (!empty($dl['2']))
+         echo "Download : <a href='" . $dl['2'] . "'> " . $dl['name2'] . " <i class='fa fa-cloud-download'></i> </a><hr/>";
+
+     echo '
 			</h3>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			  </div>
+			</div>
+		  </div>
+		</div>';
+ }
+if($forgot == true) {
+    echo '
+		<div class="modal fade" id="forgot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel"><center>Forgot Password</h4>
+			  </div>
+			  <div class="modal-body">
+                <form action=\'forgot.php\' method=\'POST\'>
+                  <div class=\'form-group\'>
+                    <label for=\'user\'>Email</label>
+                    <input type=\'email\' class=\'form-control\' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder=\'YourRegister@email.com\' name=\'fmail\' required>
+                    <p class="help-block">Username must be between 6 and 30 characters</p>
+                  </div>';
+    if($usecaptcha == true)
+        echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
+    echo '<button type="submit" style="right:0px;" class="btn btn-success">Send my password now!</button>
+                </form>
 			  </div>
 			  <div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

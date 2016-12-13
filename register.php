@@ -8,9 +8,7 @@ $email = $_POST['email'];
 $passkey = cleanthis(@$_POST['passkey']);
 $data = date("Y-m-d H:i:s");
 $cpasskey = cleanthis($_COOKIE['passkey']);
-
 $email = filter_var($email, FILTER_SANITIZE_STRING);
-
 $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 if($resp->isSuccess() or $usecaptcha == false)
 {
@@ -38,49 +36,42 @@ if($resp->isSuccess() or $usecaptcha == false)
 						{
 							$pass = hash("sha512", $pass);
 							$session = rand(1,9).rand(0,9);
-							$mailtoken = $passkey.$pass.$user.$data.$ip.$passkey.$title.$email.$session;
-							$mailtoken = md5(md5($mailtoken).md5($mailtoken).$data.$ip);
-							$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '0', ?, ?, ?, ?, ?)";
-							$params = array($user, $pass, $session, $data, $email, $ip, $mailtoken);
-							$result = sqlsrv_query($mssql, $sql, $params);
-							registermail($email, $mailtoken, $user);
-							header("Location: index.php?reg=success&user=$user&mail=$email");
-							exit();
+							if($sendverification == true){
+								$mailtoken = $passkey.$pass.$user.$data.$ip.$passkey.$title.$email.$session;
+								$mailtoken = md5(md5($mailtoken).md5($mailtoken).$data.$ip);
+								$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '0', ?, ?, ?, ?, ?)";
+								$params = array($user, $pass, $session, $data, $email, $ip, $mailtoken);
+								$result = sqlsrv_query($mssql, $sql, $params);
+								registermail($email, $mailtoken, $user);
+								exit(header("Location: index.php?reg=success&user=$user&mail=$email"));
+							}
+							else{
+								$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '0', ?, ?, ?, ?, 'yes')";
+								$params = array($user, $pass, $session, $data, $email, $ip);
+								$result = sqlsrv_query($mssql, $sql, $params);
+								exit(header("Location: index.php?reg=sucess&user=$user"));
+							}
 						}
 						else
-						{
-							header("Location: index.php?reg=maildup");
-							exit();
-						}
+							exit(header("Location: index.php?reg=maildup"));
 					}
-					else {
-						header("Location: index.php?reg=mailfail");
-						exit();
-					}
+					else
+						exit(header("Location: index.php?reg=mailfail"));
+						
 				}
 				else
-				{
-					header("Location: index.php?reg=faildup");
-					exit();
-				}
+					exit(header("Location: index.php?reg=faildup"));
+					
 			}
-			else {
-				header("Location: index.php?reg=elimit");
-				exit();
-			}
+			else
+				exit(header("Location: index.php?reg=elimit"));
 		}
-		else {
-			header("Location: index.php?reg=failpass");
-			exit();
-		}
+		else
+			exit(header("Location: index.php?reg=failpass"));
 	}
 	else
-	{
-		die("Nice try my friend! <b>Access Denied</b>");
-	}
+		exit(die("Nice try my friend! <b>Access Denied</b>"));
 }
-else {
-	header("Location: index.php?reg=gfail");
-	exit();
-}
+else
+	exit(header("Location: index.php?reg=gfail"));
 ?>
