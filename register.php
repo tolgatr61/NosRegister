@@ -39,7 +39,7 @@ if($resp->isSuccess() or $usecaptcha == false)
 							if($sendverification == true){
 								$mailtoken = $passkey.$pass.$user.$data.$ip.$passkey.$title.$email.$session;
 								$mailtoken = md5(md5($mailtoken).md5($mailtoken).$data.$ip);
-								$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '0', ?, ?, ?, ?, ?)";
+								$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '-1', ?, ?, ?, ?, ?)";
 								$params = array($user, $pass, $session, $data, $email, $ip, $mailtoken);
 								$result = sqlsrv_query($mssql, $sql, $params);
 								registermail($email, $mailtoken, $user);

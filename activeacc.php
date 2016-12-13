@@ -19,7 +19,8 @@ if($status == "active")
 			if($result == 1)
 			{
 				$params = array($code);
-				$sql = "UPDATE Account SET VerificationToken = 'yes' WHERE VerificationToken = ?";
+				$loverandom = md5(md5(rand(0,9)).md5(rand(0,9).$code));
+				$sql = "UPDATE Account SET VerificationToken = '$loverandom', Authority = '0' WHERE VerificationToken = ?";
 				$result = sqlsrv_query($mssql, $sql, $params);
 				exit(header("Location: index.php?reg=active"));
 				
