@@ -37,7 +37,7 @@ if($status == "active")
 ?>
 <html>
 	<head>
-		<title><?=$title?></title>
+		<title><?= $title?></title>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,7 +54,7 @@ if($status == "active")
 			<form action='activeacc.php' method='POST'>
 			  <div class='form-group'>
 				<label for='user'>Activation Code</label>
-				<input type='text' class='form-control' <?php if(strlen($key) == 32) echo "value='$key'";?> onfocus="this.removeAttribute('readonly');" pattern=".{32,32}" placeholder='Activation Code' name='key' required>
+				<input type='text' class='form-control' id='noremember' <?php if(strlen($key) == 32) echo "value='$key'";?> onfocus="this.removeAttribute('readonly');" pattern=".{32,32}" placeholder='Activation Code' name='key' required>
 				<p class="help-block">Your activation code from your mail address</p>
 			  </div>
 <?php

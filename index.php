@@ -1,7 +1,9 @@
 <?php
 require_once('config.php');
 if(!isset($_COOKIE['passkey']))
+{
 	setcookie("passkey", "", time()-3600);
+}
 $secret = rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . rand(1, 100) . $title . rand(1,100);
 $secret = hash("sha512", $secret);
 setcookie("passkey", $secret);
@@ -13,6 +15,32 @@ if(isset($headers['If-Modified-Since'])) {
     exit;
   }
 }
+$reg = @$_GET['reg'];
+$reg = cleanthis($reg);
+if($reg == "active")
+	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><b>Success!</b> Your account are now activated and you are ready to play!</div>';
+if($reg == "success")
+	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.<br/> To be sure that you entered the correct email ('.cleanthis($_GET['mail']).') we sent an email with the activation code.</div>';
+if($reg == "sucess")
+	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.';
+if($reg == "faildup")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Account name already exist. Please choose differit name</div>';
+if($reg == "failpass")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Password must be same.</div>';
+if($reg == "elimit")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Your password or username are too long.</div>';
+if($reg == "gfail")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! You don\'t pass google captcha test. Are you a robot?</div>';
+if($reg == "maildup")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Email address already in use. Try again with other mail.</div>';
+if($reg == "mailfail")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! What you entered does not appear to be an email address. Please try again.</div>';
+if($reg == "nokey")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! We can\'t find your activation code are you typed right? Try again!</div>';
+if($reg == "notkey")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! What you entered does not appear to be a code. What are you trying to do?</div>';
+if($reg == "gfailkey")
+	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Captcha failed! Try again! Be more carefully!</div>';
 ?>
 <html>
 	<head>
@@ -45,34 +73,6 @@ if(isset($headers['If-Modified-Since'])) {
 		<script src='https://www.google.com/recaptcha/api.js'></script>
 	</head>
 	<body>
-<?php
-$reg = @$_GET['reg'];
-$reg = cleanthis($reg);
-if($reg == "active")
-	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><b>Success!</b> Your account are now activated and you are ready to play!</div>';
-if($reg == "success")
-	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.<br/> To be sure that you entered the correct email ('.cleanthis($_GET['mail']).') we sent an email with the activation code.</div>';
-if($reg == "sucess")
-	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.';
-if($reg == "faildup")
-	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Account name already exist. Please choose differit name</div>';
-if($reg == "failpass")
-	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Password must be same.</div>';
-if($reg == "elimit")
-	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Your password or username are too long.</div>';
-if($reg == "gfail")
-	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! You don\'t pass google captcha test. Are you a robot?</div>';
-if($reg == "maildup")
-	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Email address already in use. Try again with other mail.</div>';
-if($reg == "mailfail")
-	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! What you entered does not appear to be an email address. Please try again.</div>';
-if($reg == "nokey")
-	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! We can\'t find your activation code are you typed right? Try again!</div>';
-if($reg == "notkey")
-	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! What you entered does not appear to be a code. What are you trying to do?</div>';
-if($reg == "gfailkey")
-	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Captcha failed! Try again! Be more carefully!</div>';
-?>
 		<div id='cont'>
 			<form action='register.php' method='POST'>
 			  <div class='form-group'>
@@ -106,7 +106,7 @@ if($reg == "gfailkey")
 			  if($usecaptcha == true)
 				  echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
 			  if($forgot == true)
-			      echo "<a href='forgot.php'>I forgot my password!</a>";
+			      echo "<a href='#' data-toggle='modal' data-target='#forgot'>I forgot my password!</a>";
 			  ?>
 			  <input type='hidden' name='passkey' value='<?= $secret?>'>
 			  <center><button type='submit' class='btn btn-success'>Register</button>
@@ -144,6 +144,33 @@ if($reg == "gfailkey")
 		  </div>
 		</div>';
  }
-?>
+if($forgot == true) {
+    echo '
+		<div class="modal fade" id="forgot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel"><center>Forgot Password</h4>
+			  </div>
+			  <div class="modal-body">
+                <form action=\'forgot.php\' method=\'POST\'>
+                  <div class=\'form-group\'>
+                    <label for=\'user\'>Email</label>
+                    <input type=\'email\' class=\'form-control\' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder=\'YourRegister@email.com\' name=\'fmail\' required>
+                    <p class="help-block">Username must be between 6 and 30 characters</p>
+                  </div>';
+    if($usecaptcha == true)
+        echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
+    echo '<button type="submit" style="right:0px;" class="btn btn-success">Send my password now!</button>
+                </form>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			  </div>
+			</div>
+		  </div>
+		</div>';
+}?>
 	</body>
 </html>
