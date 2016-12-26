@@ -9,7 +9,7 @@ $passkey = cleanthis(@$_POST['passkey']);
 $data = date("Y-m-d H:i:s");
 $cpasskey = cleanthis($_COOKIE['passkey']);
 $email = filter_var($email, FILTER_SANITIZE_STRING);
-$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+$resp = $recaptcha->verify(@$_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 if($resp->isSuccess() or $usecaptcha == false)
 {
 	if($cpasskey == $passkey)
