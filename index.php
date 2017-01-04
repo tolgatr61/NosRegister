@@ -104,7 +104,7 @@ if($reg == "gfailkey")
 				</label>
 			  </div>";
 			  if($usecaptcha == true)
-				  echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
+				  echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' data-sitekey='$captchapublickey'></div></div>";
 			  if($forgot == true)
 			      echo "<a href='forgot.php'>I forgot my password!</a>";
 			  ?>

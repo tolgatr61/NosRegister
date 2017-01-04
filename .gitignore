@@ -1,2 +1,5 @@
 config.php
 config.php.ignore
+*.xml
+.idea/NosRegister.iml
+*.xml

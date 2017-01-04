@@ -97,7 +97,7 @@ switch($status) {
 				<p class='help-block'>Repeat your password.</p>
 			  </div>";
         if ($usecaptcha == true)
-            echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
+            echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey'></div></div>";
         echo "<center><button type='submit' class='btn btn-default' name='status' value='changepass'>Change my password!</button></center></form>";
         break;
 	case "forgot":

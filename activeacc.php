@@ -59,7 +59,7 @@ if($status == "active")
 			  </div>
 <?php
 if($usecaptcha == true)
-  echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
+  echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey'></div></div>";
 ?>
 			  <center><button type='submit' class='btn btn-success' name='status' value='active'>Active my account now!</button>
 			</form>
