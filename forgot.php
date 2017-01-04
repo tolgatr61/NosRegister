@@ -51,6 +51,8 @@ switch($status) {
 					$sql = "SELECT * FROM Account WHERE VerificationToken = ?";
 					$opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
 					$result = sqlsrv_query($mssql, $sql, $params, $opts);
+                    $obj = sqlsrv_fetch_object($result);
+                    $name = $obj->Name;
 					$result = sqlsrv_num_rows($result);
 					if($result == 1)
 					{
@@ -59,7 +61,7 @@ switch($status) {
 						$loverandom = md5(md5(rand(0,9)).md5(rand(0,9).$key));
 						$sql = "UPDATE Account SET VerificationToken = '$loverandom', Password = ? WHERE VerificationToken = ?";
 						$result = sqlsrv_query($mssql, $sql, $params);
-						echo "<h2 style='color:whitesmoke;'>Your password was changed successfully!";
+						echo "<h2 style='color:whitesmoke;'>Your password was changed successfully!</h1><br/><h3 style='color:whitesmoke;'>Username: $name<br/>Password: You already know.</h3>";
 						exit();
 					}
 					else
@@ -79,7 +81,7 @@ switch($status) {
 			echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Password must be same. Try again.</div>';
         echo "<form action='forgot.php' method='POST'>
 				  <div class='form-group'>
-					<label for='user'>Email</label>";
+					<label for='user'>Secret Key</label>";
 					if(strlen($key) == 32)
 						echo "<input type='text' class='form-control' pattern='.{32,32}' placeholder='your forgot key' name='fkey' value='$key' required readonly>";
 					else
@@ -141,7 +143,7 @@ switch($status) {
 					<p class=\"help-block\">Enter your email address.</p>
 				  </div>";
         if ($usecaptcha == true)
-            echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey;'></div></div>";
+            echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' id='googlechap' data-sitekey='$captchapublickey'></div></div>";
         echo "<center><button type='submit' class='btn btn-default' name='status' value='forgot'>Send my password!</button></center></form>";
 }
 ?>

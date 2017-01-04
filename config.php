@@ -42,7 +42,7 @@ $dl['2'] = ""; //Download link 2	OPTIONAL
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 $mssql = sqlsrv_connect($dbhostname, $db);
 if(!$mssql)
-    die('Something went wrong while connecting to MSSQL');
+die('Something went wrong while connecting to MSSQL');
 if(empty($dbhostname))
 die("<center><h1 style='color:tomato'>Server its not configurate. Please check config.php <br/> Configrate your database please!</h1></center>");
 if(empty($title))

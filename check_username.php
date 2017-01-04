@@ -2,9 +2,8 @@
 require_once('config.php');
 if(isset($_POST["user"]))
 {
-	if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+	if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest')
 		die();
-	}
 	$username =  strtolower(trim($_POST["user"])); 
 	$username = filter_var($username, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW|FILTER_FLAG_STRIP_HIGH);
 	$username = htmlspecialchars($username, ENT_QUOTES);
