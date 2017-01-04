@@ -17,6 +17,14 @@ NosTale Register page for Emulators and Private Server
             0. You just DO WHAT THE FUCK YOU WANT TO.
             
 
+ScreenShot
+======
+![alt text](http://i.imgur.com/P1iWqy0.png "PC Version")
+![alt text](http://i.imgur.com/mKy22Ar.png "Mobile Version")
+![alt text](https://i.imgur.com/f9OKXoh.png "Email Validation")
+![alt text](https://i.imgur.com/2PNhIPn.jpg "Forgot Mail")
+
+
 Install
 ======
 ### Download and install Xampp or Wampp, or if you want apache and php.
