@@ -19,15 +19,20 @@ NosTale Register page for Emulators and Private Server
 
 ScreenShot
 ======
-PC Version
+
+#### PC Version
 ![alt text](http://i.imgur.com/P1iWqy0.png "PC Version")
-Mobile Version
+
+#### Mobile Version
 ![alt text](http://i.imgur.com/mKy22Ar.png "Mobile Version")
-Email Validation
+
+#### Email Validation
 ![alt text](https://i.imgur.com/f9OKXoh.png "Email Validation")
-Forgot Mail
+
+#### Forgot Mail
 ![alt text](https://i.imgur.com/2PNhIPn.jpg "Forgot Mail")
-Notify Email
+
+#### Notify Email
 ![alt text](http://i.imgur.com/ksvTjU0.jpg "Notify Email")
 
 
