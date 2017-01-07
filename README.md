@@ -77,6 +77,15 @@ If you need a mail server for windows / windows server , as free alternative i r
 
 As you known (or no) OpenNos use port 80, so you can't run apache on 80, as alternative you can replace http with https , for that we need a SSL Ceritificare, SSL use 443 port, not 80, so your users can type in brower " https://exemple.com " and will be displayed your register page,  you can get a free ssl ceritificare at https://www.startssl.com/ as well this ceritificate work on mail server too.
 
+TODO-List
+=======
+
+* Account Manager
+* Change Password
+* Change Email
+* Verification via Email
+* 2-FA
+
 I need more help!
 =======
 If you still have a problem or a question you can open issues there in github, i will replay a.s.a.p.
