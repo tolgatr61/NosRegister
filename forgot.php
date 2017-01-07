@@ -51,8 +51,8 @@ switch($status) {
 					$sql = "SELECT * FROM Account WHERE VerificationToken = ?";
 					$opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
 					$result = sqlsrv_query($mssql, $sql, $params, $opts);
-                    $obj = sqlsrv_fetch_object($result);
-                    $name = $obj->Name;
+          $obj = sqlsrv_fetch_object($result);
+          $name = $obj->Name;
 					$result = sqlsrv_num_rows($result);
 					if($result == 1)
 					{

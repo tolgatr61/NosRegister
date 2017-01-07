@@ -9,6 +9,11 @@ $hosturl = ""; //Your host patch eg http://yourdomain.com (without last slash " 
 $title = ""; //site title  ----- MUST BE SETTED!
 $norplaymail = ""; // noreplay mail eg "noreplay@yourdomain.com"
 ///////////////////////////////////////////
+////Do you want to display footer ?    ////
+////True = yes | False = no            ////
+///////////////////////////////////////////
+$footer = true;
+///////////////////////////////////////////
 ////Do you want to display ToS ?       ////
 ////True = yes | False = no            ////
 ///////////////////////////////////////////
@@ -19,7 +24,7 @@ $pplink = ""; //link to your Privacy Policy page eg "//mywebsite.com/pp.html" (p
 ////Do you want to enable forgot ?      ///
 ////true = yes  | false = no            ///
 ///////////////////////////////////////////
-$forgot = false; //for a moment leave it false, isn't work.
+$forgot = false;
 ///////////////////////////////////////////////
 ////Do you want to send verification mail ? ///
 ////true = yes  | false = no            	///
@@ -35,8 +40,19 @@ $captchasecret = ""; //If yes, put your SECRET key there
 ///////////////////////////////////////////
 $dl['name1'] = ""; //Set Download Name for 1st Link	
 $dl['1'] = ""; //Download link 1	OPTIONAL
-$dl['name2'] = ""; //et Download Name for 2nd Link	
+$dl['name2'] = ""; //Download Name for 2nd Link	
 $dl['2'] = ""; //Download link 2	OPTIONAL
+///////////////////////////////////////////
+////Do you want to enable login  ?      ///
+////true = yes  | false = no            ///
+///////////////////////////////////////////
+//That mean to allow users to login in ther account and they can change his password, or email, ofc you my config this...
+$login = true; //Allow login to site
+$notifymail = true; //Send notification to mail for each login, if account are accesed a mail will be send to his address with some information.
+////Below setting are under development ///
+////Please DO NOT TURN ON!              ///
+$lcpw = false; //Allow change password
+$lce = false; //Allow change email
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////DONT TUCH BELOW LINE///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,9 +66,9 @@ die("<center><h1 style='color:tomato'>Configuration incomplete. check config.php
 if(empty($hosturl))
 die("<center><h1 style='color:tomato'>Configuration incomplete. check config.php <br/> Check host url </h1></center>");
 if($usecaptcha == true && empty($captchapublickey) && empty($captchasecret))
-	die("<center><h1 style='color:tomato'>Configuration incomplete. check config.php <br/> Check Google Captcha </h1></center>");
+die("<center><h1 style='color:tomato'>Configuration incomplete. check config.php <br/> Check Google Captcha </h1></center>");
 if($displaytos == true && empty($toslink) && empty($pplink))
-	die("<center><h1 style='color:tomato'>Configuration incomplete. check config.php <br/> Check ToS or Privacy Policy</h1></center>");
+die("<center><h1 style='color:tomato'>Configuration incomplete. check config.php <br/> Check ToS or Privacy Policy</h1></center>");
 else {
 	require_once('recaptcha/autoload.php');
 	$recaptcha = new \ReCaptcha\ReCaptcha($captchasecret);
@@ -214,6 +230,154 @@ function registermail($email, $mailtoken, $user)
 	$headers .= "From: $title <$norplaymail>" . "\r\n";
 	mail($to, $subject, $message, $headers);
 }
+
+function notifymail($email, $ip, $token)
+{
+	global $norplaymail, $title, $hosturl;
+	$to = $email;
+  $data = date("Y-M-d H:i");
+	$subject = "Your account has been accessed ".$title;
+	$message = '
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="http://fonts.googleapis.com/css?family=Raleway:400,600" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    
+    html{
+        width: 100%; 
+    }
+
+	body{
+        width: 100%;  
+        margin:0; 
+        padding:0; 
+        -webkit-font-smoothing: antialiased; 
+        mso-padding-alt: 0px 0px 0px 0px;
+        background: #ffffff;
+    }
+    
+    p,h1,h2,h3,h4{
+        margin-top:0;
+		margin-bottom:0;
+		padding-top:0;
+		padding-bottom:0;
+    }
+    
+    table{
+        font-size: 14px;
+        border: 0;
+    }
+
+    img{
+    	border: none!important;
+    }
+
+  </style>
+</head>
+<body style="margin: 0; padding: 0;">
+	<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#424242" style="height:450px;">
+	  <tr>
+	   <td>
+		   	<table width="600" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+		   		<tbody>
+		   			<tr>
+		   				<td height="169"></td>
+		   			</tr>
+		   			<tr>
+		   				<td style="text-align:center; color: #fff; font-family: \'Raleway\', arial; font-weight:600; font-size: 36px; text-transform:uppercase; letter-spacing:3px;">Your account has been accessed!</td>
+		   			</tr>
+		   			<tr>
+		   				<td height="133"></td>
+		   			</tr>
+		   		</tbody>
+		   	</table>
+	   </td>
+	  </tr>
+	 </table>
+	<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#212121" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+		<tbody>
+			<tr>
+				<td>
+					<table width="600" align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+						<tbody>
+							<tr>
+								<td width="100%" height="100"></td>
+							</tr>
+							<tr>
+								<td width="100%" height="20"></td>
+							</tr>
+							<tr>
+								<td style="color: whitesmoke; font-family: \'Raleway\', arial; font-size: 18px; line-height:28px;">';
+	$message .= "Hello dear user,<br/>
+									Your security is very important to us. We noticed that your account was recently accessed,<br/>
+                  IP -> $ip <br/>
+                  Data -> $data <br/>
+                  Token -> $token <br/>
+									If this was you, you can ignore this alert. If you suspect any suspicious activity on your account, please change your password.<br/>
+                  If you have any questions or concerns, don't hesitate to get in touch.<br/>
+                  Best,<br/>
+                  $title Team";
+	$message .= '								</td>
+							</tr>
+							<tr>
+								<td width="100%" height="100"></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table width="100%" bgcolor="#f9823a" cellpadding="0" border="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+		<tbody>
+			<tr>
+				<td>
+					<table width="600" align="center" cellpadding="0" border="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+						<tbody>
+							<tr>
+								<td width="100%" height="40px"></td>
+							</tr>
+							<tr>
+								<td>
+									<table  align="left" cellpadding="0" border="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+										<tbody>
+											<tr>
+												<td>
+													<table cellpadding="0" border="0" cellspacing="0" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+														<tr>
+															<td width="100%" height="16"></td>
+														</tr>
+														<tr>
+															<td style="color: #fff; font-family: \'Raleway\'; font-size: 12px;">© All rights reserved '.$title.'</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td width="100%" height="40px"></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>';
+	$headers  = 'MIME-Version: 1.0' . "\r\n";
+	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+	$headers .= "To: $email" . "\r\n";
+	$headers .= "From: $title <$norplaymail>" . "\r\n";
+	mail($to, $subject, $message, $headers);
+}
+
 function forgotmail($email, $mailtoken)
 {
 	global $norplaymail, $title, $hosturl;

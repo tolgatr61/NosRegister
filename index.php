@@ -42,7 +42,22 @@ if(isset($headers['If-Modified-Since'])) {
 		<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="./css/style.min.css">
 		<link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
-		<script src='https://www.google.com/recaptcha/api.js'></script>
+        <?php if($usecaptcha == true)
+		echo "<script src='https://www.google.com/recaptcha/api.js?onload=Chap&render=explicit' async defer></script>
+    <script>
+      var recaptcha1;
+      var recaptcha2;
+      var Chap = function() {
+        recaptcha1 = grecaptcha.render('recaptcha1', {
+          'sitekey' : '$captchapublickey',
+          'theme' : 'light'
+        });
+        recaptcha2 = grecaptcha.render('recaptcha2', {
+          'sitekey' : '$captchapublickey',
+          'theme' : 'light'
+        });
+      };
+    </script>";?>
 	</head>
 	<body>
 <?php
@@ -74,46 +89,71 @@ if($reg == "gfailkey")
 	echo '<div id="alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Failed! Captcha failed! Try again! Be more carefully!</div>';
 ?>
 		<div id='cont'>
-			<form action='register.php' method='POST'>
-			  <div class='form-group'>
-				<label for='user'>Username</label>
-				<input type='text' class='form-control' id='user' pattern=".{6,30}" placeholder='Username' name='user' required><span style="float:right;" id="user-result"></span>
-				<p class="help-block">Username must be between 6 and 30 characters</p>
-			  </div>
-			  <div class='form-group'>
-				<label for='Password'>Email</label>
-				<input type='email' id="noremember" class='form-control' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder='email@you.there' name='email' onfocus="this.removeAttribute('readonly');" required readonly>
-				<p class="help-block">Your email address. Please do not use yahoo!</p>
-			  </div>
-			  <div class='form-group'>
-				<label for='Password'>Password</label>
-				<input type='password' id="noremember" class='form-control' pattern=".{6,30}" placeholder='Password' name='pass' onfocus="this.removeAttribute('readonly');" required readonly>
-				<p class="help-block">Password must be between 6 and 30 characters. We recommand to use complexe password.</p>
-			  </div>
-			  <div class='form-group'>
-				<label for='Password1'>Repeat Password</label>
-				<input type='password' class='form-control' pattern=".{6,30}" id="noremember" placeholder='Repeat Password' name='c_pass' onfocus="this.removeAttribute('readonly');" required readonly>
-				<p class="help-block">Repeat your password.</p>
-			  </div>
-			  <?php
-			  if($displaytos == true)
-				  echo "
-			  <div class='checkbox'>
-				<label>
-				  <input type='checkbox' name='tos' value='true' required> I agree to the <a href='$toslink'>Terms of Use</a> and <a href='$pplink'>Privacy Policy</a>.
-				</label>
-			  </div>";
-			  if($usecaptcha == true)
-				  echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div class='g-recaptcha' data-sitekey='$captchapublickey'></div></div>";
-			  if($forgot == true)
-			      echo "<a href='forgot.php'>I forgot my password!</a>";
-			  ?>
-			  <input type='hidden' name='passkey' value='<?= $secret?>'>
-			  <center><button type='submit' class='btn btn-success'>Register</button>
-<?			if(!empty($dl['1']))
-			  echo "<div class='btn btn-info' style='margin-left:5px;' data-toggle='modal' data-target='#myModal'><a style='color:white !important;font-weight:700;text-decoration:none'><i class='fa fa-cloud-download'></i> Download</a></div>";?>
-			</center>
-			</form>
+        <?php
+            if($login == true)
+            {
+                echo "<div class='lbox'>
+                <a id='logint'> Login </a>
+            </div>;
+            <div id='login'>
+                <form action='account.php' method='POST'>
+                  <div class='form-group'>
+                    <label for='user'>Username</label>
+                    <input type='text' class='form-control' pattern='.{6,30}' placeholder='Username' name='luser' onfocus='this.removeAttribute(\"readonly\");'  required readonly>
+                  </div>
+                  <div class='form-group'>
+                    <label for='Password'>Password</label>
+                    <input type='password' id='noremember' class='form-control' pattern='.{6,30}' placeholder='Password' name='lpass' onfocus='this.removeAttribute(\"readonly\");' required readonly>
+                  </div>
+                  <center>";
+                  if($usecaptcha == true)
+                      echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div id='recaptcha1'></div></div>";
+                  echo "<button type='submit' class='btn btn-login' name='status' value='login'>Login</button></center>
+                 </form>
+            </div>";
+            }?>
+            <div id='register'>
+                <form action='register.php' method='POST'>
+                  <div class='form-group'>
+                    <label for='user'>Username</label>
+                    <input type='text' class='form-control' id='user' pattern=".{6,30}" placeholder='Username' name='user' required><span style="float:right;" id="user-result"></span>
+                    <p class="help-block">Username must be between 6 and 30 characters</p>
+                  </div>
+                  <div class='form-group'>
+                    <label for='Password'>Email</label>
+                    <input type='email' id="noremember" class='form-control' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder='email@you.there' name='email' onfocus="this.removeAttribute('readonly');" required readonly>
+                    <p class="help-block">Your email address. Please do not use yahoo!</p>
+                  </div>
+                  <div class='form-group'>
+                    <label for='Password'>Password</label>
+                    <input type='password' id="noremember" class='form-control' pattern=".{6,30}" placeholder='Password' name='pass' onfocus="this.removeAttribute('readonly');" required readonly>
+                    <p class="help-block">Password must be between 6 and 30 characters. We recommand to use complexe password.</p>
+                  </div>
+                  <div class='form-group'>
+                    <label for='Password1'>Repeat Password</label>
+                    <input type='password' class='form-control' pattern=".{6,30}" id="noremember" placeholder='Repeat Password' name='c_pass' onfocus="this.removeAttribute('readonly');" required readonly>
+                    <p class="help-block">Repeat your password.</p>
+                  </div>
+                  <?php
+                  if($displaytos == true)
+                      echo "
+                  <div class='checkbox'>
+                    <label>
+                      <input type='checkbox' name='tos' value='true' required> I agree to the <a href='$toslink'>Terms of Use</a> and <a href='$pplink'>Privacy Policy</a>.
+                    </label>
+                  </div>";
+                  if($usecaptcha == true)
+                      echo "<div style='display: block;text-align: center;text-align: -webkit-center;'><div id='recaptcha2'></div></div>";
+                  if($forgot == true)
+                      echo "<a href='forgot.php'>I forgot my password!</a>";
+                  ?>
+                  <input type='hidden' name='passkey' value='<?= $secret?>'>
+                  <center><button type='submit' class='btn btn-success'>Register</button>
+    <?			if(!empty($dl['1']))
+                  echo "<div class='btn btn-info' style='margin-left:5px;' data-toggle='modal' data-target='#myModal'><a style='color:white !important;font-weight:700;text-decoration:none'><i class='fa fa-cloud-download'></i> Download</a></div>";?>
+                </center>
+                </form>
+            </div>
 		</div>
 <?
  if(!empty($dl['1'])) {
@@ -145,5 +185,20 @@ if($reg == "gfailkey")
 		</div>';
  }
 ?>
+        <script>
+       $(document).ready(function () {
+    $("#logint").click(function() {
+      $("#login").slideToggle(function() {
+          $("#register").slideToggle();
+      });
+    });
+})
+        </script>
+        <?php
+        if($footer == true)
+          echo '<div id="footer">
+              <a href="//github.com/fmohican/NosRegister" style="text-align:center;">&copy; NosRegister 2015-'.date("Y").'</a>
+          </div>';
+        ?>
 	</body>
 </html>
