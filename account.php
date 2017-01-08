@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+require_once('mail.lib.php');
 $status = cleanthis(@$_REQUEST['status']);
 ?>
 <html>
@@ -41,15 +42,21 @@ $status = cleanthis(@$_REQUEST['status']);
           $result = sqlsrv_query($mssql, $sql, $params, $opts);
           $obj = sqlsrv_fetch_object($result);
           $email = $obj->Email;
-          $token = md5(md5(rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).$pass.date("Y-M-S-i").$user.rand(0,9).rand(0,9).rand(0,9).rand(0,9)));
-          setcookie("passtoken", $token, time()+3600);
-          setcookie("passuser", $user, time()+3600);
-          $sql = "UPDATE Account SET VerificationToken = ? WHERE Name = ? AND Password = ?";
-          $params = array($token, $user, $pass);
-          sqlsrv_query($mssql, $sql, $params);
-          if($notifymail == true)
-            notifymail($email, $ip, $token);
-          exit(header("Location: account.php?status=menu"));
+          $valid = $obj->Authority;
+          if($valid >= 0)
+          {
+            $token = md5(md5(rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).$pass.date("Y-M-S-i").$user.rand(0,9).rand(0,9).rand(0,9).rand(0,9)));
+            setcookie("passtoken", $token, time()+3600);
+            setcookie("passuser", $user, time()+3600);
+            $sql = "UPDATE Account SET VerificationToken = ? WHERE Name = ? AND Password = ?";
+            $params = array($token, $user, $pass);
+            sqlsrv_query($mssql, $sql, $params);
+            if($notifymail == true)
+              notifymail($email, $ip, $token);
+            exit(header("Location: account.php?status=menu"));
+          }
+          else
+            exit(header("Location: account.php?status=invalid"));
         }
         else
           exit(header("Location: account.php?status=authfail"));
@@ -81,23 +88,97 @@ $status = cleanthis(@$_REQUEST['status']);
         exit(header("Location: account.php?status=cofail"));
       }
       break;
+    case "invalid":
+      echo "<h1 style='color:whitesmoke;'>Please valid your account before login!</h1>";
+      break;
+    case "psize":
+      echo "<h1 style='color:whitesmoke;'>You'r password are too weak, try another one.</h1>";
+      break;
+    case "authfail":
+      echo "<h1 style='color:whitesmoke;'>Authentification failed!</h1>";
+      break;
+    case "gfail":
+      echo "<h1 style='color:whitesmoke;'>Sorry but you don't pass captcha test. Are you a robot?!</h1>";
+      break;
+    case "npass":
+      echo "<h1 style='color:whitesmoke;'>Password must be same due security reason!</h1>";
+      break;
+    case "cofail":
+      setcookie("passtoken", "", time()-93600);
+      setcookie("passuser", "", time()-93600);
+      echo "<h1 style='color:whitesmoke;'>You'r security token are broken!</h1>";
+      break;
+    case "cpasswrong":
+      echo "<h1 style='color:whitesmoke;'>You enter wrong password, try again</h1>";
+      break;
+    case "psuccess":
+      echo "<h1 style='color:whitesmoke;'>You'r password was changed success fully!</h1>";
+      setcookie("passtoken", "", time()-93600);
+      setcookie("passuser", "", time()-93600);
+      break;
+    case "changepw":
+      $token = cleanthis($_COOKIE['passtoken']);
+      $cpass = cleanthis($_POST['cpass']);
+      $npass = cleanthis($_POST['npass']);
+      $cnpass = cleanthis($_POST['cnpass']);
+      if(strlen($npass) <= 5)
+        exit(header("Location: account.php?status=psize"));
+      $npass = hash("SHA512", $npass);
+      $cnpass = hash("SHA512", $cnpass);
+      if($npass === $cnpass)
+      {
+        if(strlen($token) == 32)
+        {
+          $cpass = hash("SHA512", $cpass);
+          $params = array($token, $cpass);
+          $sql = "SELECT * FROM Account WHERE VerificationToken = ? AND Password = ?";
+          $opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+          $restul = sqlsrv_query($mssql, $sql, $params, $opts);
+          $obj = sqlsrv_fetch_object($restul);
+          $email = $obj->Email;
+          $restul = sqlsrv_num_rows($restul);
+          if($restul == 1)
+          {
+            $params = array($npass, $token, $email);
+            $sql = "UPDATE Account SET Password = ? WHERE VerificationToken = ? AND Email = ?";
+            sqlsrv_query($mssql, $sql, $params);
+            if($notifymail == true)
+            {
+              $ip = $_SERVER['REMOTE_ADDR'];
+              notifycpass($email, $ip, $token);
+            }
+            exit(header("Location: account.php?status=psuccess"));
+          }
+          else
+            exit(header("Location: account.php?status=cpasswrong"));
+        }
+        else
+        {
+          setcookie("passtoken", "", time()-93600);
+          setcookie("passuser", "", time()-93600);
+          exit(header("Location: account.php?status=cofail"));
+        }
+      }
+      else
+        exit(header("Location: account.php?status=npass"));
+      break;
     case "logout":
       setcookie("passtoken", "", time()-93600);
       setcookie("passuser", "", time()-93600);
-      exit(header("Location: index.php"));
+      exit(header("Location: index.php?reg=logout"));
       break;
     default:
       $data = $_COOKIE['passtoken'];
       if(strlen($data) == 32)
         exit(header("Location: account.php?status=menu"));
       else
-        exit(header("Location: index.php?status=noa"));
+        exit(header("Location: index.php?reg=cofail"));
       break;
   }
 ?>
     </div>
 <?php
-if($lcpw == true && strlen($_COOKIE['passtoken']) == 32)
+if($lcpw == true && strlen(@$_COOKIE['passtoken']) == 32)
 echo "<div class='modal fade' id='changepw' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'>
                   <div class='modal-dialog' role='document'>
                     <div class='modal-content'>
@@ -137,7 +218,7 @@ echo "<div class='modal fade' id='changepw' tabindex='-1' role='dialog' aria-lab
                     </div>
                   </div>
                 </div>";
-if($lce == true && strlen($_COOKIE['passtoken']) == 32)
+if($lce == true && strlen(@$_COOKIE['passtoken']) == 32)
 echo "                <div class='modal fade' id='changemail' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'>
                   <div class='modal-dialog' role='document'>
                     <div class='modal-content'>

@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+require_once('mail.lib.php');
 $user = cleanthis(@$_POST['user']);
 $pass = cleanthis(@$_POST['pass']);
 $confirmpass = cleanthis(@$_POST['c_pass']);
