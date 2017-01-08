@@ -581,3 +581,4 @@ function forgotmail($email, $mailtoken)
 	$headers .= "From: $title <$norplaymail>" . "\r\n";
 	mail($to, $subject, $message, $headers);
 }
+?>
