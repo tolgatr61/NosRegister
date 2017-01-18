@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+require_once('mail.lib.php');
 $status = cleanthis(@$_REQUEST['status']);
 ?>
 <html>
