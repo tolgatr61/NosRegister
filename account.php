@@ -43,7 +43,7 @@ $status = cleanthis(@$_REQUEST['status']);
           $obj = sqlsrv_fetch_object($result);
           $email = $obj->Email;
           $valid = $obj->Authority;
-          if($valid >= 0)
+          if($valid == 0 or $valid == -3 or $valid == -2 or $valid == 2)
           {
             $token = md5(md5(rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).$pass.date("Y-M-S-i").$user.rand(0,9).rand(0,9).rand(0,9).rand(0,9)));
             setcookie("passtoken", $token, time()+3600);
