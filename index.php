@@ -31,8 +31,21 @@ if(isset($headers['If-Modified-Since'])) {
 				if(username.length < 6){$("#user-result").html('');return;}
 				if(username.length >= 6){
 					$("#user-result").html('<i class="fa-li fa fa-spinner fa-spin"></i>');
-					$.post('check_username.php', {'user':username}, function(data) {
+					$.post('check.php', {'user':username}, function(data) {
 					  $("#user-result").html(data);
+					});
+				}
+			});	
+		});
+		$(document).ready(function() {
+			$("#mail").keyup(function (e) {
+				$(this).val($(this).val().replace(/\s/g, ''));
+				var username = $(this).val();
+				if(username.length < 6){$("#mail-result").html('');return;}
+				if(username.length >= 6){
+					$("#mail-result").html('<i class="fa-li fa fa-spinner fa-spin"></i>');
+					$.post('check.php', {'mail':username}, function(data) {
+					  $("#mail-result").html(data);
 					});
 				}
 			});	
@@ -125,7 +138,7 @@ if($reg == "gfailkey")
                   </div>
                   <div class='form-group'>
                     <label for='Password'>Email</label>
-                    <input type='email' id="noremember" class='form-control' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder='email@you.there' name='email' onfocus="this.removeAttribute('readonly');" required readonly>
+                    <input type='email' id="mail" class='form-control' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder='email@you.there' name='email' onfocus="this.removeAttribute('readonly');" required readonly><span style="float:right;" id="mail-result"></span>
                     <p class="help-block">Your email address. Please do not use yahoo!</p>
                   </div>
                   <div class='form-group'>

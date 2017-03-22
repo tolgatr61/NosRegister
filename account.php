@@ -71,10 +71,27 @@ $status = cleanthis(@$_REQUEST['status']);
       $sql = "SELECT * FROM Account WHERE Name = ? AND VerificationToken = ?";
       $opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
       $restul = sqlsrv_query($mssql, $sql, $params, $opts);
+      $obj = sqlsrv_fetch_object($restul);
+      $email = $obj->Email;
+      $rank = $obj->Authority;
       $result = sqlsrv_num_rows($restul);
       if($result == 1)
       {
         echo "<h1 style='color:whitesmoke;'>Welcome, $user</h1><hr/>";
+        echo '
+<button id="infot" class="btn btn-primary btn-lg btn-block">Account Information</button><br/>
+<div class="well well-lg" id="infob" style="display:none;">
+Username: '.$user.'<br/>
+Email: '.$email.'</br>
+Status: '.rank($rank).'</br>
+</div>
+<script>
+$("#infot" ).click(function() {
+  $( "#infob" ).slideToggle( "slow", function() {
+  });
+});
+</script>';
+
         if($lcpw == true)
           echo "<button type='button' class='btn btn-primary btn-lg btn-block' data-toggle='modal' data-target='#changepw'>Change Password</button><br/>";
         if($lce == true)
@@ -115,6 +132,10 @@ $status = cleanthis(@$_REQUEST['status']);
       echo "<h1 style='color:whitesmoke;'>You'r password was changed success fully!</h1>";
       setcookie("passtoken", "", time()-93600);
       setcookie("passuser", "", time()-93600);
+      break;
+    case "cmail":
+      echo "<h1 style='color:whitesmoke;'>You'r mail was updated success fully!</h1><br/><a href='account.php' class='btn btn-primary btn-lg btn-block'>Return to menu</a><br/>";
+      
       break;
     case "changepw":
       $token = cleanthis($_COOKIE['passtoken']);
@@ -161,6 +182,37 @@ $status = cleanthis(@$_REQUEST['status']);
       }
       else
         exit(header("Location: account.php?status=npass"));
+      break;
+    case "changemail":
+      $pass = hash("SHA512",cleanthis($_POST["cpass"]));
+      $nmail = cleanthis($_POST["nmail"]);
+      $token = cleanthis($_COOKIE['passtoken']);
+      if(strlen($token) == 32)
+      {
+          $params = array($token, $pass);
+          $sql = "SELECT * FROM Account WHERE VerificationToken = ? AND Password = ?";
+          $opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+          $restul = sqlsrv_query($mssql, $sql, $params, $opts);
+          $obj = sqlsrv_fetch_object($restul);
+          $cmail = $obj->Email;
+          $restul = sqlsrv_num_rows($restul);
+          if($restul == 1)
+          {
+            notifycmail($cmail, $nmail, $token);
+            $params = array($nmail, $token, $cmail);
+            $sql = "UPDATE Account SET Email = ? WHERE VerificationToken = ? AND Email = ?";
+            sqlsrv_query($mssql, $sql, $params);
+            notifycsmail($nmail);
+            exit(header("Location: account.php?status=cmail"));
+          }
+          else
+            exit(header("Location: account.php?status=cpasswrong"));
+      }
+      else {
+          setcookie("passtoken", "", time()-93600);
+          setcookie("passuser", "", time()-93600);
+          exit(header("Location: account.php?status=cofail"));
+      }
       break;
     case "logout":
       setcookie("passtoken", "", time()-93600);
@@ -224,7 +276,7 @@ echo "                <div class='modal fade' id='changemail' tabindex='-1' role
                     <div class='modal-content'>
                       <div class='modal-header'>
                         <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-                        <h4 class='modal-title' id='myModalLabel'>Change Password</h4>
+                        <h4 class='modal-title' id='myModalLabel'>Change Email Address</h4>
                       </div>
                       <div class='modal-body'>
                         <form class='form-horizontal' action='account.php' method='POST'>
