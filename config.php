@@ -50,8 +50,6 @@ $dl['2'] = ""; //Download link 2	OPTIONAL
 $login = true; //Allow login to site
 $notifymail = true; //Send notification to mail for each login, if account are accesed a mail will be send to his address with some information.
 $lcpw = false; //Allow change password
-////Below setting are under development ///
-////Please DO NOT TURN ON!              ///
 $lce = false; //Allow change email
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////DONT TUCH BELOW LINE///////////////////////////////////////////////
