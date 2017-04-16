@@ -36,19 +36,18 @@ if($resp->isSuccess() or $usecaptcha == false)
 						if($restul < 1)
 						{
 							$pass = hash("sha512", $pass);
-							$session = rand(1,9).rand(0,9);
 							if($sendverification == true){
-								$mailtoken = $passkey.$pass.$user.$data.$ip.$passkey.$title.$email.$session;
+								$mailtoken = $passkey.$pass.$user.$data.$ip.$passkey.$title.$email;
 								$mailtoken = md5(md5($mailtoken).md5($mailtoken).$data.$ip);
-								$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '-1', ?, ?, ?, ?, ?)";
-								$params = array($user, $pass, $session, $data, $email, $ip, $mailtoken);
+								$sql = "INSERT INTO Account (Name, Password, Authority, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '-1', ?, ?, ?)";
+								$params = array($user, $pass, $email, $ip, $mailtoken);
 								$result = sqlsrv_query($mssql, $sql, $params);
 								registermail($email, $mailtoken, $user);
 								exit(header("Location: index.php?reg=success&user=$user&mail=$email"));
 							}
 							else{
-								$sql = "INSERT INTO Account (Name, Password, Authority, LastSession, LastCompliment, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '0', ?, ?, ?, ?, 'yes')";
-								$params = array($user, $pass, $session, $data, $email, $ip);
+								$sql = "INSERT INTO Account (Name, Password, Authority, Email, RegistrationIP, VerificationToken) VALUES ( ?, ?, '0', ?, ?, 'yes')";
+								$params = array($user, $pass, $email, $ip);
 								$result = sqlsrv_query($mssql, $sql, $params);
 								exit(header("Location: index.php?reg=sucess&user=$user"));
 							}

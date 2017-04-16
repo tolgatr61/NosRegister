@@ -881,14 +881,17 @@ function forgotmail($email, $mailtoken)
 
 function rank($data) {
   switch ($data) {
-    case "-1":
-      return "Unverified user";
+    case "2":
+      return "Admin";
       break;
+    case "1":
+      return "Moderator";
+      break;      
     case "0":
       return "Confirmed User";
       break;
-    case "2":
-      return "Admin";
+    case "-1":
+      return "Unverified user";
       break;
     case "-2":
       return "Banned";

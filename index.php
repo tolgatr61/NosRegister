@@ -16,7 +16,7 @@ if(isset($headers['If-Modified-Since'])) {
 ?>
 <html>
 	<head>
-		<title><?= $title?></title>
+		<title><?php echo $title;?></title>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -166,13 +166,13 @@ if($reg == "gfailkey")
                   ?>
                   <input type='hidden' name='passkey' value='<?= $secret?>'>
                   <center><button type='submit' class='btn btn-success'>Register</button>
-    <?			if(!empty($dl['1']))
+    <?php			if(!empty($dl['1']))
                   echo "<div class='btn btn-info' style='margin-left:5px;' data-toggle='modal' data-target='#myModal'><a style='color:white !important;font-weight:700;text-decoration:none'><i class='fa fa-cloud-download'></i> Download</a></div>";?>
                 </center>
                 </form>
             </div>
 		</div>
-<?
+<?php
  if(!empty($dl['1'])) {
      echo '
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

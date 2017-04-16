@@ -112,7 +112,7 @@ $("#infot" ).click(function() {
       echo "<h1 style='color:whitesmoke;'>You'r password are too weak, try another one.</h1>";
       break;
     case "authfail":
-      echo "<h1 style='color:whitesmoke;'>Authentification failed!</h1>";
+      echo "<h1 style='color:whitesmoke;text-align:center;text-align:-webkit-center;'>Authentification failed!</h1>";
       break;
     case "gfail":
       echo "<h1 style='color:whitesmoke;'>Sorry but you don't pass captcha test. Are you a robot?!</h1>";
