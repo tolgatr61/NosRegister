@@ -43,7 +43,13 @@ $status = cleanthis(@$_REQUEST['status']);
           $obj = sqlsrv_fetch_object($result);
           $email = $obj->Email;
           $valid = $obj->Authority;
-          if($valid == 0 or $valid == -3 or $valid == -2 or $valid == 2)
+          if($valid == -3)
+            exit(header("Location: account.php?status=closed"));
+          if($valid == -2)
+            exit(header("Location: account.php?status=banned"));
+          if($valid == -1)
+            exit(header("Location: account.php?status=invalid"));
+          if($valid == 0 or $valid == 1 or $valid == 2)
           {
             $token = md5(md5(rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).$pass.date("Y-M-S-i").$user.rand(0,9).rand(0,9).rand(0,9).rand(0,9)));
             setcookie("passtoken", $token, time()+3600);
@@ -84,6 +90,8 @@ $status = cleanthis(@$_REQUEST['status']);
 Username: '.$user.'<br/>
 Email: '.$email.'</br>
 Status: '.rank($rank).'</br>
+Characters: <br/>
+'.infos($user).'
 </div>
 <script>
 $("#infot" ).click(function() {
@@ -97,7 +105,9 @@ $("#infot" ).click(function() {
         if($lce == true)
           echo"<button type='button' class='btn btn-primary btn-lg btn-block' data-toggle='modal' data-target='#changemail'>Change Email</button><br/>";
         echo "<button type='button' class='btn btn-success btn-lg btn-block'>Support</button><br/>
-              <button type='button' class='btn btn-danger btn-lg btn-block' onclick='location.href = \"account.php?status=logout\";'>Log Out</button>";
+              <button type='button' class='btn btn-danger btn-lg btn-block' onclick='location.href = \"account.php?status=logout\";'>Log Out</button><br/>";
+        if($delc == true)
+          echo"<button type='button' class='btn btn-danger btn-lg btn-block' data-toggle='modal' data-target='#delmyacc'>Delete this account</button>";
       }
       else {
         setcookie("passtoken", "", time()-93600);
@@ -107,6 +117,12 @@ $("#infot" ).click(function() {
       break;
     case "invalid":
       echo "<h1 style='color:whitesmoke;'>Please valid your account before login!</h1>";
+      break;
+    case "closed":
+      echo "<h1 style='color:whitesmoke;'>Your account has been closed. Please contact GameTeam for more information!</h1>";
+      break;
+    case "banned":
+      echo "<h1 style='color:tomato;font-weight:bold;'>Your account has been banned!.<br/> Please contact GameTeam for more information!</h1>";
       break;
     case "psize":
       echo "<h1 style='color:whitesmoke;'>You'r password are too weak, try another one.</h1>";
@@ -135,7 +151,26 @@ $("#infot" ).click(function() {
       break;
     case "cmail":
       echo "<h1 style='color:whitesmoke;'>You'r mail was updated success fully!</h1><br/><a href='account.php' class='btn btn-primary btn-lg btn-block'>Return to menu</a><br/>";
-      
+      break;
+    case "delc":
+      $user = $_COOKIE['passuser'];
+      $pass = cleanthis($_POST['pass']);
+      $pass = hash("SHA512", $pass);
+      $params = array($user, $pass);
+      $sql = "SELECT * FROM Account WHERE Name = ? AND Password = ?";
+      $opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+      $restul = sqlsrv_query($mssql, $sql, $params, $opts);
+      $restuls = sqlsrv_num_rows($restul);
+      if($restuls == 1)
+      {
+        $auth = -3;
+        $params = array($auth, $user);
+        $sql = "UPDATE Account SET Authority = ? WHERE Name = ?";
+        sqlsrv_query($mssql, $sql, $params);
+        exit(header("Location: index.php?reg=dels"));
+      }
+      else
+        exit(header("Location: account.php?status=logout"));
       break;
     case "changepw":
       $token = cleanthis($_COOKIE['passtoken']);
@@ -230,6 +265,46 @@ $("#infot" ).click(function() {
 ?>
     </div>
 <?php
+if($delc == true && strlen(@$_COOKIE['passtoken']) == 32)
+  echo "
+  <div class='modal fade' id='delmyacc' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'>
+  <div class='modal-dialog' role='document'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+        <h4 class='modal-title' id='myModalLabel'>Change Password</h4>
+      </div>
+      <div class='modal-body'>
+        <form class='form-horizontal' action='account.php' method='POST'>
+          <div class='form-group'>
+            <label for='inputEmail3' class='col-sm-2 control-label'>Account</label>
+            <div class='col-sm-10'>
+              <input class='form-control' type='text' placeholder='$user' readonly>
+            </div>
+          </div>
+          <div class='form-group'>
+            <label for='inputEmail3' class='col-sm-2 control-label'>Email</label>
+            <div class='col-sm-10'>
+              <input class='form-control' type='text' placeholder='$email' readonly>
+            </div>
+          </div>
+          <div class='form-group'>
+            <label for='inputEmail3' class='col-sm-2 control-label'>Current Password</label>
+            <div class='col-sm-10'>
+              <input type='password' class='form-control' placeholder='Confrim Password' name='pass'>
+              <p class='help-block'>You'r current password</p>
+            </div>
+          </div>
+          <p style='color:red;font-weight:bold;'>This action is irreversible, you will close your account forever.</p>
+      </div>
+      <div class='modal-footer'>
+        <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
+        <button type='submit' class='btn btn-primary' name='status' value='delc'>Delete my account</button>
+      </div>
+     </form>
+    </div>
+  </div>
+</div>";
 if($lcpw == true && strlen(@$_COOKIE['passtoken']) == 32)
 echo "<div class='modal fade' id='changepw' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'>
                   <div class='modal-dialog' role='document'>

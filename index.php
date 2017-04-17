@@ -74,12 +74,13 @@ if(isset($headers['If-Modified-Since'])) {
 	</head>
 	<body>
 <?php
-$reg = @$_GET['reg'];
-$reg = cleanthis($reg);
+$reg = cleanthis(@$_GET['reg']);
 if($reg == "active")
 	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><b>Success!</b> Your account are now activated and you are ready to play!</div>';
 if($reg == "success")
 	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.<br/> To be sure that you entered the correct email ('.cleanthis($_GET['mail']).') we sent an email with the activation code.</div>';
+if($reg == "dels")
+	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Your account has been be deleted</div>';
 if($reg == "sucess")
 	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.';
 if($reg == "logout")

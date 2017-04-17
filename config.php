@@ -5,7 +5,7 @@ $db = array(
     "Uid" => "", //Database User
     "PWD" => "" // Database Password;
 );
-$hosturl = ""; //Your host patch eg http://yourdomain.com (without last slash " / ") ----- MUST BE STTED!
+$hosturl = ""; //Your host patch eg http://yourdomain.com (without last slash " / ") ----- MUST BE SETTED!
 $title = ""; //site title  ----- MUST BE SETTED!
 $norplaymail = ""; // noreplay mail eg "noreplay@yourdomain.com"
 ///////////////////////////////////////////
@@ -39,8 +39,8 @@ $captchapublickey = ""; //If yes , put your PUBLIC key there  (site key its call
 $captchasecret = ""; //If yes, put your SECRET key there
 ///////////////////////////////////////////
 $dl['name1'] = ""; //Set Download Name for 1st Link	
-$dl['1'] = ""; //Download link 1	OPTIONAL
-$dl['name2'] = ""; //Download Name for 2nd Link	
+$dl['1'] = ""; //Download link 1
+$dl['name2'] = ""; //Download Name for 2nd Link	 OPTIONAL
 $dl['2'] = ""; //Download link 2	OPTIONAL
 ///////////////////////////////////////////
 ////Do you want to enable login  ?      ///
@@ -51,6 +51,7 @@ $login = true; //Allow login to site
 $notifymail = true; //Send notification to mail for each login, if account are accesed a mail will be send to his address with some information.
 $lcpw = false; //Allow change password
 $lce = false; //Allow change email
+$delc = false; //Allow user to 'delete' his account, Note user account will not be deleted from database will be closed.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////DONT TUCH BELOW LINE///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

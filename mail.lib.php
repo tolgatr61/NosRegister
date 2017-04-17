@@ -904,4 +904,49 @@ function rank($data) {
       break;
   }
 }
+function clas2name($class)
+{
+  switch($class) {
+    case "0":
+      return "Adventure";
+      break;
+    case "1":
+      return "Swordman";
+      break;
+    case "2":
+      return "Archer";
+      break;
+    case "3":
+      return "Mage";
+      break;
+    default:
+      return "Unknow";
+      break;
+  }
+}
+function infos($account){
+  global $mssql;
+  $params = array($account);
+  $sql = "SELECT * FROM Account WHERE Name = ?";
+  $opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+  $result = sqlsrv_query($mssql, $sql, $params, $opts);
+  $obj = sqlsrv_fetch_object($result);
+  $id = $obj->AccountId;
+  if($id > 0)
+  {
+    $data = "";
+    $params = array($id);
+    $sql = "SELECT * FROM Character WHERE AccountId = ?";
+    $opts = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+    $result = sqlsrv_query($mssql, $sql, $params, $opts);
+    while($row = sqlsrv_fetch_object($result))
+    {
+        $name = $row->Name;
+        $lv = $row->Level;
+        $class = clas2name($row->Class);
+        $data .="[Lv.$lv] $name - $class <br/>";
+    }
+    return $data;
+  }
+}
 ?>
