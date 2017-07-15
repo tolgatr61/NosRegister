@@ -38,7 +38,9 @@ ScreenShot
 
 Install
 ======
-### Download and install Xampp or Wampp, or if you want apache and php.
+### Download and install Xampp or Wampp, or if you want apache, nginx or other all webserver and php7.
+
+You must install PHP7, sqlsrv extenstion are for PHP7
 
 ### In order to use sqlsvr you need to install mssql extension you can find more there : 
 * http://php.net/manual/en/mssql.installation.php
