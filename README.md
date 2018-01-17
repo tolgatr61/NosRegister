@@ -1,4 +1,4 @@
-NosRegister
+NosRegister (OUTDATED)
 =======
 NosTale Register page for Emulators and Private Server
 
