@@ -1,3 +1,5 @@
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/aa754869c3db5a66ca66/maintainability)](https://codeclimate.com/github/fmohican/NosRegister/maintainability)
 NosRegister (OUTDATED)
 =======
 NosTale Register page for Emulators and Private Server
