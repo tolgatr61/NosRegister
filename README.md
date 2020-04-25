@@ -6,6 +6,7 @@ Added new design.
 Fix register for last opennos sources.
 Fix some MSSQL request.
 Fix some issues of responsive design.
+Fix success or error indicator/pannel of register.
 Added new redirections and buttons with new pages.
 Added a fully translated French Version with a respective design of the Original Version and working responsive design.
 
