@@ -78,7 +78,7 @@ $reg = cleanthis(@$_GET['reg']);
 if($reg == "active")
 	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><b>Success!</b> Your account are now activated and you are ready to play!</div>';
 if($reg == "success")
-	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.<br/> To be sure that you entered the correct email ('.cleanthis($_GET['mail']).') we sent an email with the activation code.</div>';
+	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Welcome '.cleanthis($_GET['user']).' ! Your account was created.<br/> Download NosTorm now ! </div>';
 if($reg == "dels")
 	echo '<div id="alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Your account has been be deleted</div>';
 if($reg == "sucess")
@@ -112,7 +112,7 @@ if($reg == "gfailkey")
             {
                 echo "<div class='lbox'>
                 <a id='logint'> Login </a>
-            </div>;
+            </div>
             <div id='login'>
                 <form action='account.php' method='POST'>
                   <div class='form-group'>
@@ -170,6 +170,9 @@ if($reg == "gfailkey")
     <?php			if(!empty($dl['1']))
                   echo "<div class='btn btn-info' style='margin-left:5px;' data-toggle='modal' data-target='#myModal'><a style='color:white !important;font-weight:700;text-decoration:none'><i class='fa fa-cloud-download'></i> Download</a></div>";?>
                 </center>
+				<center><button type='submit' class='btn btn-discord' onclick="location.href='https://discord.gg/6cqzjSe'"; >Discord</button></center>
+				<a href="/fr"><img src="img/fr.png" alt="Image" /></a>
+				<button type='submit' class='btn btn-donate' onclick="location.href='nosmall.html'"; >Donate</button></center>
                 </form>
             </div>
 		</div>
@@ -181,7 +184,7 @@ if($reg == "gfailkey")
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel"><center>Download Client of ' . $title . '</h4>
+				<h4 class="modal-title" id="myModalLabel"><center>Put Client of ' . $title . ' inside a NosTale folder.</h4>
 			  </div>
 			  <div class="modal-body">
 			  <center><h2>Download Links<h2></center><hr><hr>
@@ -215,7 +218,7 @@ if($reg == "gfailkey")
         <?php
         if($footer == true)
           echo '<div id="footer">
-              <a href="//github.com/fmohican/NosRegister" style="text-align:center;">&copy; NosRegister 2015-'.date("Y").'</a>
+              <a href="#" style="text-align:center;">&copy; NosRegister 2015-'.date("Y").'. Modified by Rayshon for NosTorm </a>
           </div>';
         ?>
 	</body>

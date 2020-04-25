@@ -1,0 +1,38 @@
+body {
+background-image : url("../img/background.jpg");
+color : white;
+text-align : center;
+}
+
+#bloc1 {
+	
+	margin : 200px;
+	
+}
+
+#bloc1 h1 {
+	font-size : 60px;
+	color : gold;
+	
+}
+
+p {
+	font-size : 25px;
+	font-weight : bold;
+	
+}
+
+footer {
+	
+	margin : 150px;
+}
+
+#bloc2 a {
+	color : gold;
+	
+}
+
+#bloc2 a:hover {
+	color : blue;
+	
+}

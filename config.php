@@ -1,13 +1,13 @@
 <?php
-$dbhostname = ""; //MsSQl Server Addres
+$dbhostname = "localhost"; //MsSQl Server Addres
 $db = array(
-    "Database" => "", // Database Name
+    "Database" => "opennos", // Database Name
     "Uid" => "", //Database User
     "PWD" => "" // Database Password;
 );
-$hosturl = ""; //Your host patch eg http://yourdomain.com (without last slash " / ") ----- MUST BE SETTED!
-$title = ""; //site title  ----- MUST BE SETTED!
-$norplaymail = ""; // noreplay mail eg "noreplay@yourdomain.com"
+$hosturl = "http://25.81.119.156:8080"; //Your host patch eg http://yourdomain.com (without last slash " / ") ----- MUST BE SETTED!
+$title = "NosTorm"; //site title  ----- MUST BE SETTED!
+$norplaymail = "nostorm@gmail.com"; // noreplay mail eg "noreplay@yourdomain.com"
 ///////////////////////////////////////////
 ////Do you want to display footer ?    ////
 ////True = yes | False = no            ////
@@ -18,8 +18,8 @@ $footer = true;
 ////True = yes | False = no            ////
 ///////////////////////////////////////////
 $displaytos = false;
-$toslink = ""; //link to your ToS page eg "//mywebsite.com/tos.html" (please use // instead of http or https !!!)
-$pplink = ""; //link to your Privacy Policy page eg "//mywebsite.com/pp.html" (please use // instead of http or https !!!)
+$toslink = "//25.81.119.156:8080/tos.html"; //link to your ToS page eg "//mywebsite.com/tos.html" (please use // instead of http or https !!!)
+$pplink = "//25.81.119.156:8080/pp.html"; //link to your Privacy Policy page eg "//mywebsite.com/pp.html" (please use // instead of http or https !!!)
 ///////////////////////////////////////////
 ////Do you want to enable forgot ?      ///
 ////true = yes  | false = no            ///
@@ -34,12 +34,12 @@ $sendverification = false;
 ////Do you want to use Google CAPTCHA ? ///
 ////true = yes  | false = no            ///
 ///////////////////////////////////////////
-$usecaptcha = false; //if you want to use google captcha you can get secret key and public key there https://www.google.com/recaptcha/admin
-$captchapublickey = ""; //If yes , put your PUBLIC key there  (site key its called on google page's)
-$captchasecret = ""; //If yes, put your SECRET key there
+$usecaptcha = true; //if you want to use google captcha you can get secret key and public key there https://www.google.com/recaptcha/admin
+$captchapublickey = "6LezuMUUAAAAALyJWxweBI_DYMOiRFzEn7UXa3iu"; //If yes , put your PUBLIC key there  (site key its called on google page's)
+$captchasecret = "6LezuMUUAAAAAFKMMG83aKAjtDt05keWDSID7s41"; //If yes, put your SECRET key there
 ///////////////////////////////////////////
-$dl['name1'] = ""; //Set Download Name for 1st Link	
-$dl['1'] = ""; //Download link 1
+$dl['name1'] = "Client nostorm"; //Set Download Name for 1st Link	
+$dl['1'] = "nostorm.exe"; //Download link 1
 $dl['name2'] = ""; //Download Name for 2nd Link	 OPTIONAL
 $dl['2'] = ""; //Download link 2	OPTIONAL
 ///////////////////////////////////////////
